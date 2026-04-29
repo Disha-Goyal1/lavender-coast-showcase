@@ -10,20 +10,20 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'cd server && npm install'
-                sh 'cd client && npm install && npm run build'
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t mern-app .'
+                sh 'docker build -t lavender-coast-app .'
             }
         }
 
         stage('Push to ECR') {
             steps {
-                sh 'docker tag mern-app:latest <ECR_URI>'
+                sh 'docker tag lavender-coast-app:latest <ECR_URI>'
                 sh 'docker push <ECR_URI>'
             }
         }
