@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/Disha-Goyal1/lavender-coast-showcase.git'
+                git branch: 'main', url: 'https://github.com/Disha-Goyal1/lavender-coast-showcase.git'
             }
         }
 
@@ -25,12 +25,6 @@ pipeline {
             steps {
                 sh 'docker tag mern-app:latest <ECR_URI>'
                 sh 'docker push <ECR_URI>'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
             }
         }
     }
