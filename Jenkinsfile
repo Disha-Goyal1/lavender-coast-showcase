@@ -14,21 +14,18 @@ pipeline {
             }
         }
 
-        // ✅ Install frontend
         stage('Install Frontend') {
             steps {
                 sh 'npm install'
             }
         }
 
-        // ✅ Build frontend
         stage('Build Frontend') {
             steps {
                 sh 'npm run build'
             }
         }
 
-        // ✅ Install backend (IMPORTANT)
         stage('Install Backend') {
             steps {
                 dir('backend') {
@@ -37,14 +34,12 @@ pipeline {
             }
         }
 
-        // ✅ Docker build
         stage('Docker Build') {
             steps {
-                sh 'docker build -t lavender-coast-app .'
+                sh 'docker build --no-cache -t lavender-coast-app .'
             }
         }
 
-        // ✅ Login to ECR
         stage('Login to ECR') {
             steps {
                 sh '''
@@ -53,7 +48,6 @@ aws ecr get-login-password --region eu-north-1 | docker login --username AWS --p
             }
         }
 
-        // ✅ Push image
         stage('Push to ECR') {
             steps {
                 sh '''
