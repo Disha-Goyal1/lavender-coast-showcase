@@ -23,8 +23,13 @@ pipeline {
 
         stage('Push to ECR') {
             steps {
-                sh 'docker tag lavender-coast-app:latest <ECR_URI>'
-                sh 'docker push <ECR_URI>'
+                sh '''
+                aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 754248136315.dkr.ecr.eu-north-1.amazonaws.com
+
+                docker tag lavender-coast-app:latest 754248136315.dkr.ecr.eu-north-1.amazonaws.com/lavender-coast-app:latest
+
+                docker push 754248136315.dkr.ecr.eu-north-1.amazonaws.com/lavender-coast-app:latest
+                '''
             }
         }
     }
