@@ -1,4 +1,4 @@
-# ---------- STEP 1: Build Frontend ----------
+# Build React app
 FROM node:18-alpine as build
 
 WORKDIR /app
@@ -8,31 +8,14 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# Serve with nginx
+FROM nginx:alpine
 
-# ---------- STEP 2: Run Backend + Serve Frontend ----------
-FROM node:18-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 
-WORKDIR /app
+# 🔥 ADD THIS LINE
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# copy backend folder
-COPY backend ./backend
+EXPOSE 80
 
-# install backend dependencies
-WORKDIR /app/backend
-RUN npm install
-
-# go back to root
-WORKDIR /app
-
-# copy frontend build
-COPY --from=build /app/dist ./frontend
-
-# install static server
-RUN npm install -g serve
-
-# expose ports
-EXPOSE 3000
-EXPOSE 5000
-
-# run both backend + frontend
-CMD ["sh", "-c", "node backend/server.js & serve -s frontend -l 3000"]
+CMD ["nginx", "-g", "daemon off;"]
