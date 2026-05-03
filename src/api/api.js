@@ -1,14 +1,18 @@
-const BASE_URL = "http://13.60.64.146:5000"; // your backend EC2 IP
+const BASE_URL = "http://13.60.64.146:5000";
 
-// Checkout API
 export const checkout = async (cart) => {
   try {
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
     const response = await fetch(`${BASE_URL}/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ cart }),
+      body: JSON.stringify({
+        items: cart,
+        total: total,
+      }),
     });
 
     if (!response.ok) {
